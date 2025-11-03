@@ -1,234 +1,105 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Resume | Karthik Sethuraman</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <!-- Chosen Palette: Warm Neutrals -->
-    <!-- Application Structure Plan: Dashboard-style SPA. 1. Hero, 2. Key Metrics Dashboard (visual $$$/scale), 3. Interactive Skill Tabs (Skills + Proof Points), 4. Accordion Career Timeline. WHY: This non-linear design serves executive/recruiter audience by surfacing high-impact metrics (the "what") first, then allowing on-demand drill-down into skills (the "how") and experience (the "proof"), which is more intuitive than a linear resume. -->
-    <!-- Visualization & Content Choices: 
-        - Key Metrics (1.2M TPS, $15M Rev) -> Goal: Inform/Impress -> Viz: HTML/CSS "Metric Card Dashboard" -> Interaction: Hover. Justification: Faster to read/more impactful than a chart for executive-level summary data. Method: HTML/Tailwind.
-        - Skills List -> Goal: Organize/Relate -> Viz: Interactive Tabbed Interface -> Interaction: Click tab -> JS updates "Skills" and "Proof Points" (from JS object). Justification: Connects claims (skills) to evidence (bullets) dynamically. Method: Vanilla JS.
-        - Experience -> Goal: Inform/Drill-Down -> Viz: Vertical Accordion Timeline -> Interaction: Click to expand/collapse. Justification: Cleans UI, shows career progression, allows drill-down. Method: Vanilla JS.
-        - Charts: No charts used. Justification: For this resume, quantified metric cards are a more direct and powerful visualization of impact than a bar/line chart. Chart.js CDN is loaded per requirement.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        .tab-active {
-            border-bottom-color: #4f46e5; 
-            color: #4f46e5;
-            font-weight: 600;
-        }
-        .tab-inactive {
-            border-bottom-color: transparent;
-            color: #6b7280;
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .accordion-content.open {
-            max-height: 1000px; 
-        }
-        .accordion-arrow {
-            transition: transform 0.3s ease;
-        }
-        .accordion-button.open .accordion-arrow {
-            transform: rotate(90deg);
-        }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 19px;
-            top: 2.25rem;
-            bottom: 0;
-            width: 2px;
-            background-color: #e5e7eb; 
-            z-index: 0;
-        }
-        .timeline-item:last-child::before {
-            display: none;
-        }
-        .timeline-dot {
-            position: absolute;
-            left: 0.75rem;
-            top: 1.25rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 9999px;
-            background-color: #e5e7eb;
-            border: 4px solid #ffffff;
-            z-index: 10;
-        }
-        .timeline-dot-active {
-            background-color: #4f46e5;
-        }
-    </style>
+    <title>Karthik Sethuraman - Engineering & Technology Leader</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0">
-                    <span class="text-xl font-bold text-gray-900">Karthik Sethuraman</span>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#summary" class="nav-link text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Summary</a>
-                        <a href="#metrics" class="nav-link text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Key Metrics</a>
-                        <a href="#competencies" class="nav-link text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Core Competencies</a>
-                        <a href="#timeline" class="nav-link text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium">Career Timeline</a>
-                        <a href="#contact" class="nav-link bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium shadow-sm">Contact</a>
-                    </div>
-                </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                        <span class="sr-only">Open main menu</span>
-                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div id="mobile-menu" class="md:hidden hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#summary" class="nav-link block text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-base font-medium">Summary</a>
-                <a href="#metrics" class="nav-link block text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-base font-medium">Key Metrics</a>
-                <a href="#competencies" class="nav-link block text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-base font-medium">Core Competencies</a>
-                <a href="#timeline" class="nav-link block text-gray-600 hover:text-indigo-600 px-3 py-2 rounded-md text-base font-medium">Career Timeline</a>
-                <a href="#contact" class="nav-link block bg-indigo-600 text-white hover:bg-indigo-700 px-3 py-2 rounded-md text-base font-medium">Contact</a>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-
-        <section id="summary" class="mb-16 bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-            <h1 class="text-4xl font-bold text-gray-900">KARTHIK SETHURAMAN</h1>
-            <h2 class="text-2xl font-semibold text-indigo-700 mt-2">SOLUTIONS ARCHITECT & DATA ENGINEERING LEADER</h2>
-            <p class="mt-6 text-lg text-gray-700 leading-relaxed">
-                Visionary Engineering Executive with <strong>14+ years of expertise</strong> in Solutions Architecture, Petabyte-Scale Data Engineering, and Cloud Architecture. Proven record leading globally distributed engineering teams (up to <strong>50+ members</strong>) to design, build, and operate <strong>Tier-1, low-latency data services</strong> supporting <strong>1.2M+ TPS</strong>. Expert in driving strategic high-growth initiatives that generated <strong>$15M in new revenue</strong> while delivering <strong>$2M+ in verified annual savings</strong> through architecture modernization.
+    <header class="header">
+        <h1>KARTHIK SETHURAMAN</h1>
+        <p class="contact-info">
+            <a href="mailto:Karthik.Sethuraman@gmail.com">Karthik.Sethuraman@gmail.com</a> |
+            <a href="https://linkedin.com/in/karsethu/" target="_blank">LinkedIn</a> |
+            425-516-2456
             </p>
+        <h2 class="role-title">ENGINEERING & TECHNOLOGY LEADER</h2>
+    </header>
+
+    <main class="container">
+
+        <section class="section">
+            <h2>📝 Professional Summary</h2>
+            [cite_start]<p>Innovative engineering leader with 14+ years of expertise in Cloud-Native Architecture, Big Data Engineering, AI/ML Systems, and Distributed Platforms[cite: 4]. [cite_start]Proven ability to scale globally distributed teams (50+ engineers), architect petabyte-scale data and ML platforms, and deliver high-availability, low-latency services supporting up to 1.2M TPS[cite: 5]. [cite_start]Skilled in driving large-scale digital transformation and cross-functional alignment between Product, Engineering, and C-level execs[cite: 6].</p>
         </section>
 
-        <section id="metrics" class="mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Key Metrics</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">$15M</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Revenue Generated (6 Mo)</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">1.2M+</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Transactions per Sec</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">50+</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Global Team Members</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">$2M+</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Annual Savings</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">99.999%</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Service Uptime</div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105">
-                    <div class="text-4xl font-extrabold text-indigo-700">&lt; 1 Day</div>
-                    <div class="text-sm font-medium text-gray-600 mt-2">Process (from 20 Days)</div>
-                </div>
+        <section class="section">
+            <h2>💡 Core Competencies</h2>
+            <ul class="skills-list">
+                [cite_start]<li>Engineering Leadership & Strategy (Org Design, Strategic Roadmaps, Collaboration) [cite: 8]</li>
+                [cite_start]<li>Cloud & Data Platform Engineering (AWS, Containerization, Microservices) [cite: 9]</li>
+                [cite_start]<li>AI/ML Platforms (ML Ops, AI-Driven Products, Model Deployment) [cite: 10]</li>
+                [cite_start]<li>Big Data Technologies (Apache Spark, Kafka, Hadoop, Real-time Processing) [cite: 11]</li>
+                [cite_start]<li>System Design & Ops Excellence (Distributed Systems, 99.999% Uptime, SRE) [cite: 12, 19]</li>
+                [cite_start]<li>Business Impact (Revenue Growth, Cost Optimization, Budget Management up to $30M) [cite: 13, 19, 26, 29]</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>💼 Professional Experience</h2>
+            
+            <div class="job-entry">
+                <h3>Software Development Manager - Amazon (Advertising & Prime Video)</h3>
+                <p class="job-details">Seattle, WA | Jun 2022 - Present</p>
+                <ul>
+                    [cite_start]<li>Architected and led Tier-1, petabyte-scale advertising platforms handling billions of daily events and enabling **1.2M+ TPS** across high-traffic domains[cite: 16].</li>
+                    [cite_start]<li>Drove Service Reliability Engineering (SRE) best practices achieving **99.999% service uptime** while optimizing a **$30M cloud infrastructure budget**[cite: 19].</li>
+                    [cite_start]<li>Implemented ML/Big Data infrastructure to govern petabyte-scale clusters, boosting actionable insights and decision-making[cite: 18].</li>
+                    [cite_start]<li>Built and led globally distributed engineering teams to deliver end-to-end ownership of core ad-tech platforms[cite: 20].</li>
+                </ul>
+            </div>
+            
+            <div class="job-entry">
+                <h3>Director of Engineering - Science 37</h3>
+                <p class="job-details">Los Angeles, CA | May 2021 - Jun 2022</p>
+                <ul>
+                    [cite_start]<li>Directed a globally distributed Product Engineering org (50+ engineers) through an IPO-focused transformation[cite: 22].</li>
+                    [cite_start]<li>Delivered mission-critical product capabilities in 10 weeks, directly generating **$15M in new revenue**[cite: 24, 26].</li>
+                    [cite_start]<li>Built cloud-native, microservices architecture using AWS, enhancing scalability and **reducing costs by 30%**[cite: 23].</li>
+                </ul>
+            </div>
+
+            <div class="job-entry">
+                <h3>Sr. Manager, Engineering - Farmers Insurance</h3>
+                <p class="job-details">Woodland Hills, CA | Mar 2017 - May 2021</p>
+                <ul>
+                    [cite_start]<li>Headed digital transformation for core Life insurance platforms, **reducing customer wait time from 20 days to <1 day**[cite: 28].</li>
+                    [cite_start]<li>Migrated strategic enterprise applications to AWS, resulting in **$2M annual cost savings**[cite: 29].</li>
+                    [cite_start]<li>Led cross-functional teams of 25+ across Product, TPM, QA, and Engineering teams[cite: 30].</li>
+                </ul>
+            </div>
+            
+            <div class="job-entry">
+                <h3>Software Engineering Manager - USAA</h3>
+                <p class="job-details">San Antonio, TX | Sep 2010 - Feb 2017</p>
+                <ul>
+                    [cite_start]<li>Delivered **30+ mission-critical fintech applications**, including innovative web/mobile stock and mutual fund trading platforms[cite: 32].</li>
+                    [cite_start]<li>Built and mentored 2 high-performing engineering teams focused on financial service delivery with 24x7 availability[cite: 33].</li>
+                </ul>
+            </div>
+
+            <div class="job-entry">
+                <h3>Early Career Roles</h3>
+                <ul>
+                    <li>**Sr. [cite_start]Software Engineer / Tech Lead - Xcel Energy** (Sep 2009-Sep 2010): Modernized payment processing and customer onboarding systems for 5M+ customers, **increasing performance by 25%**[cite: 36, 37].</li>
+                    [cite_start]<li>**Software Engineer - Verizon Wireless** (May 2005-Sep 2009): Built workflows enabling **8M+ subscribers** to activate phones and manage plans online[cite: 38].</li>
+                </ul>
             </div>
         </section>
 
-        <section id="competencies" class="mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Core Competencies</h2>
-            <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
-                <p class="text-gray-700 mb-6">
-                    This section interactively connects skills with tangible accomplishments. Click a tab to see the relevant skills and the specific "Proof Points" from my career that demonstrate that expertise.
-                </p>
-                <div class="border-b border-gray-200">
-                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
-                        <button class="tab-button tab-active whitespace-nowrap py-3 px-1 border-b-2 text-sm" data-tab="architecture">
-                            Solutions & Cloud Architecture
-                        </button>
-                        <button class="tab-button tab-inactive whitespace-nowrap py-3 px-1 border-b-2 text-sm" data-tab="data">
-                            Data Engineering & ML
-                        </button>
-                        <button class="tab-button tab-inactive whitespace-nowrap py-3 px-1 border-b-2 text-sm" data-tab="leadership">
-                            Executive & People Leadership
-                        </button>
-                    </nav>
-                </div>
-
-                <div id="tab-content" class="mt-6 min-h-[300px]">
-                    <div id="architecture-content" class="tab-pane">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Key Skills</h4>
-                                <ul id="architecture-skills" class="list-disc list-inside space-y-1 text-gray-700">
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Proof Points</h4>
-                                <ul id="architecture-proof" class="list-disc list-inside space-y-2 text-gray-700">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="data-content" class="tab-pane hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Key Skills</h4>
-                                <ul id="data-skills" class="list-disc list-inside space-y-1 text-gray-700">
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Proof Points</h4>
-                                <ul id="data-proof" class="list-disc list-inside space-y-2 text-gray-700">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="leadership-content" class="tab-pane hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Key Skills</h4>
-                                <ul id="leadership-skills" class="list-disc list-inside space-y-1 text-gray-700">
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-semibold text-gray-900 mb-3">Proof Points</h4>
-                                <ul id="leadership-proof" class="list-disc list-inside space-y-2 text-gray-700">
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <section class="section">
+            <h2>📚 Education & Certifications</h2>
+            <div class="education-entry">
+                [cite_start]<p><strong>Technology Leadership Certificate</strong>, University of California, Los Angeles (UCLA) [cite: 41]</p>
+                [cite_start]<p><strong>Master's in Electrical Engineering</strong>, Louisiana State University [cite: 42]</p>
+                [cite_start]<p><strong>Bachelor's in Electrical & Electronics Engineering</strong>, Bangalore University [cite: 43]</p>
             </div>
         </section>
 
-        <section id="timeline" class="mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8">Career Timeline</h2>
-            <div class="relative">
-                
-                <div class="timeline-item relative pl-12 pb-8">
-                    <div class="timeline-dot timeline-dot-active"></div>
-                    <button class="accordion-button open w-full text-left bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xl font-semibold text-gray-900">Software Development Manager</h3>
-                                <p class="text-indigo-700 font-medium">Amazon (Advertising & Prime Video)</p>
-                                <p class="text-sm text-gray-500 mt-1">Jun. 2022 – Present</p>
-                            </div>
-                            <span class="accordion-arrow text-indigo-600 text-2xl font-bold transition-transform transform
+    </main>
+
+</body>
+</html>
