@@ -1,0 +1,113 @@
+/* Basic Reset and Font Setup */
+body {
+    font-family: 'Roboto', sans-serif; /* Uses the font linked in HTML */
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9; /* Light grey background */
+}
+
+/* Page Layout */
+.container {
+    max-width: 850px; /* Standard resume width */
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Header/Contact Info */
+.header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #007bff; /* Blue line separator */
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    margin: 0 0 5px 0;
+    color: #007bff;
+    font-weight: 700;
+}
+
+.role-title {
+    margin-top: 5px;
+    font-size: 1.2em;
+    color: #555;
+    font-weight: 400;
+}
+
+.contact-info a {
+    color: #333;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 0.9em;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+/* Section Headings */
+.section {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+}
+
+.section h2 {
+    color: #444;
+    border-left: 5px solid #007bff; /* Small vertical blue line accent */
+    padding-left: 10px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Experience Entries */
+.job-entry, .education-entry {
+    margin-bottom: 20px;
+}
+
+.job-entry h3, .education-entry h3 {
+    color: #007bff;
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.job-details {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #666;
+    margin: 5px 0 10px 0;
+}
+
+.job-entry ul {
+    list-style: disc;
+    padding-left: 25px;
+}
+
+.job-entry li {
+    margin-bottom: 8px;
+}
+
+/* Skills List (Core Competencies) */
+.skills-list {
+    list-style: none; /* Removes bullets */
+    padding: 0;
+}
+
+.skills-list li {
+    background-color: #e9f0ff; /* Light blue tag background */
+    color: #007bff;
+    padding: 5px 12px;
+    margin: 0 10px 10px 0;
+    border-radius: 5px;
+    font-size: 0.9em;
+    font-weight: 500;
+    display: inline-block; /* Makes them look like tags */
+}
