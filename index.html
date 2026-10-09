@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Karthik Sethuraman - Director of Engineering</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
     <style>
         :root {
             --primary-color: #0f172a;
@@ -71,6 +72,7 @@
             flex-wrap: wrap;
             font-size: 0.925rem;
             color: var(--text-muted);
+            margin-bottom: 0.75rem;
         }
 
         .contact-info a {
@@ -81,6 +83,24 @@
 
         .contact-info a:hover {
             text-decoration: underline;
+        }
+
+        .print-btn {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1e40af;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .print-btn:hover {
+            background: #dbeafe;
         }
 
         section {
@@ -197,6 +217,9 @@
                 padding: 0;
                 max-width: 100%;
             }
+            .print-btn {
+                display: none; /* Hide download button on printed PDF */
+            }
             section {
                 margin-bottom: 1.25rem;
             }
@@ -231,6 +254,7 @@
                 <span>•</span>
                 <span>(425) 516-2456</span>
             </p>
+            <button class="print-btn" onclick="window.print()">📄 Download / Print PDF</button>
         </header>
 
         <section class="summary">
@@ -341,7 +365,7 @@
 
         </section>
 
-      <section class="education">
+        <section class="education">
             <h2>Education & Executive Credentials</h2>
             <div class="edu-grid">
                 <div class="edu-item">
